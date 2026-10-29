@@ -1,0 +1,258 @@
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .model-container {
+        padding: 30px;
+    }
+
+    .model-card {
+        background: #191c24;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-header-custom h3 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .form-control-custom {
+        background: #2A3038;
+        border: 1px solid #3e444d;
+        color: white;
+        border-radius: 10px;
+        height: 50px;
+    }
+
+    .form-control-custom:focus {
+        background: #2A3038;
+        color: white;
+        border-color: #6a11cb;
+        box-shadow: none;
+    }
+
+    select.form-control-custom option {
+        background: #2A3038;
+        color: white;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        border: none;
+        padding: 10px 30px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+    }
+
+    .btn-save:hover {
+        color: white;
+        opacity: .9;
+    }
+
+    .table {
+        color: white;
+    }
+
+    .table thead {
+        background: #2A3038;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .btn-edit {
+        background: #28a745;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-edit:hover,
+    .btn-delete:hover {
+        color: white;
+        text-decoration: none;
+        opacity: .9;
+    }
+
+    .section-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="model-container">
+
+        <!-- Model Form -->
+        <div class="card model-card mb-4">
+
+            <div class="card-header-custom">
+                <h3>
+                    <i class="mdi mdi-car-sports"></i>
+                    Vehicle Model Management
+                </h3>
+            </div>
+
+            <div class="card-body">
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label class="text-white">
+                            <i class="mdi mdi-tag-multiple"></i>
+                            Select Brand
+                        </label>
+
+                        <select name="sel_brand"
+                                class="form-control form-control-custom"
+                                required>
+
+                            <option value="">
+                                -- Select Brand --
+                            </option>
+
+                            {% for i in brand %}
+                            <option
+                            {% if i.id == data.brand.id %}
+                            selected
+                            {% endif %}
+                            value="{{i.id}}">
+                                {{i.brand_name}}
+                            </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="form-group mt-4">
+                        <label class="text-white">
+                            <i class="mdi mdi-car"></i>
+                            Model Name
+                        </label>
+
+                        <input type="text"
+                               name="txtname"
+                               value="{{data.model_name}}"
+                               class="form-control form-control-custom"
+                               placeholder="Enter Vehicle Model"
+                               required>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-save">
+                            <i class="mdi mdi-content-save"></i>
+                            Save Model
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+
+        <!-- Model List -->
+        <div class="card model-card">
+
+            <div class="card-body">
+
+                <h4 class="section-title">
+                    <i class="mdi mdi-format-list-bulleted"></i>
+                    Vehicle Model Details
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Brand</th>
+                                <th>Model</th>
+                                <th width="220">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for i in Model %}
+                            <tr>
+
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>
+                                    <i class="mdi mdi-tag text-primary"></i>
+                                    {{ i.brand.brand_name }}
+                                </td>
+
+                                <td>
+                                    <i class="mdi mdi-car-sports text-info"></i>
+                                    {{ i.model_name }}
+                                </td>
+
+                                <td>
+
+                                    <a href="{% url 'Administrator:editmodel' i.id %}"
+                                       class="btn-edit">
+                                        <i class="mdi mdi-pencil"></i>
+                                        Edit
+                                    </a>
+
+                                    <a href="{% url 'Administrator:deletemodel' i.id %}"
+                                       class="btn-delete ml-2"
+                                       onclick="return confirm('Are you sure you want to delete this Model?')">
+                                        <i class="mdi mdi-delete"></i>
+                                        Delete
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    No Vehicle Models Found
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

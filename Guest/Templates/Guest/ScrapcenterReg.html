@@ -1,0 +1,626 @@
+{% extends 'Guest/Header.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scrap Registration</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #1638ff22, transparent 30%),
+                radial-gradient(circle at bottom right, #c300ff22, transparent 30%),
+                #020617;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            width: 100%;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .logo span {
+            color: #3b82f6;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #3b82f6;
+        }
+
+        /* MAIN SECTION */
+
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 20px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 950px;
+            background: rgba(8, 15, 40, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(18px);
+            border-radius: 25px;
+            padding: 45px;
+            box-shadow:
+                0 0 30px rgba(0, 0, 0, 0.5),
+                0 0 50px rgba(59, 130, 246, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            background: #3b82f6;
+            filter: blur(180px);
+            top: -120px;
+            left: -120px;
+            opacity: 0.25;
+        }
+
+        .register-card::after {
+            content: '';
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            background: #c026d3;
+            filter: blur(180px);
+            bottom: -120px;
+            right: -120px;
+            opacity: 0.20;
+        }
+
+        .form-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .icon-box {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .icon-box i {
+            font-size: 34px;
+            color: #3b82f6;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 38px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #b6c2d9;
+            margin-bottom: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .input-box input,
+        .input-box textarea,
+        .input-box select {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            outline: none;
+            color: white;
+            padding: 15px 15px 15px 48px;
+            border-radius: 14px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .input-box textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        .input-box input:focus,
+        .input-box textarea:focus,
+        .input-box select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        select option {
+            color: black;
+        }
+
+        .full-width {
+            grid-column: 1/3;
+        }
+
+        .gender-box {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-top: 10px;
+        }
+
+        .gender-box label {
+            font-size: 15px;
+        }
+
+        /* BUTTONS */
+
+        .btn-area {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .btn {
+            border: none;
+            padding: 15px 45px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-register {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(37, 99, 235, 0.45);
+        }
+
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-reset:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* FOOTER */
+
+        footer {
+            margin-top: 40px;
+            padding: 40px 8%;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .footer-box {
+            max-width: 300px;
+        }
+
+        .footer-box h3 {
+            margin-bottom: 18px;
+            color: #fff;
+        }
+
+        .footer-box p,
+        .footer-box a {
+            color: #b6c2d9;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 28px;
+        }
+
+        .footer-box a:hover {
+            color: #3b82f6;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            background: #3b82f6;
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width:768px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .register-card {
+                padding: 30px 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: 1/2;
+            }
+
+            .title {
+                font-size: 30px;
+            }
+
+            .btn-area {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- MAIN CONTENT -->
+
+    <div class="main-container">
+
+        <div class="register-card">
+
+            <div class="form-content">
+
+                <div class="icon-box">
+                    <i class="fa-solid fa-recycle"></i>
+                </div>
+
+                <h1 class="title">Scrap Registration</h1>
+
+                <p class="subtitle">
+                    Join our smart scrap management platform
+                </p>
+
+                <form method="post" enctype="multipart/form-data">
+
+                    {% csrf_token %}
+
+                    <div class="form-grid">
+
+                        <!-- NAME -->
+
+                        <div class="input-group">
+                            <label>Name</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-user"></i>
+
+                                <input type="text" required name="txt_name" placeholder="Enter your name"
+                                    title="Name Allows Only Alphabets,Spaces and First Letter Must Be Capital Letter"
+                                    pattern="^[A-Z]+[a-zA-Z ]*$" />
+                            </div>
+                        </div>
+
+                        <!-- EMAIL -->
+
+                        <div class="input-group">
+                            <label>Email Address</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-envelope"></i>
+
+                                <input type="text" required name="txt_email" placeholder="Enter your email" />
+                            </div>
+                        </div>
+
+                        <!-- CONTACT -->
+
+                        <div class="input-group">
+                            <label>Contact</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input type="text" required name="txt_contact"
+                                    placeholder="Enter your contact number" />
+                            </div>
+                        </div>
+
+                        <!-- DOB -->
+
+                        <div class="input-group">
+                            <label>ESTABLISHED DATE </label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-calendar"></i>
+
+                                <input type="date" required name="date_DOB" />
+                            </div>
+                        </div>
+
+                        <!-- ADDRESS -->
+
+                        <div class="input-group full-width">
+                            <label>Address</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                <textarea required name="txt_address" placeholder="Enter your address"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- DISTRICT -->
+
+                        <div class="input-group">
+                            <label>District</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-map"></i>
+
+                                <select name="sel_district" id="sel_district" required>
+
+                                    <option value="">
+                                        ---Select District---
+                                    </option>
+
+                                    {% for i in district %}
+
+                                    <option value="{{i.id}}">
+                                        {{ i.district_name }}
+                                    </option>
+
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- PLACE -->
+
+                        <div class="input-group">
+                            <label>Place</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-location-crosshairs"></i>
+
+                                <select name="sel_place" id="sel_place" required>
+
+                                    <option value="">
+                                        ---Select Place---
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- PHOTO -->
+
+                        <div class="input-group">
+                            <label>Photo</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-image"></i>
+
+                                <input type="file" required name="file_photo" />
+                            </div>
+                        </div>
+                        <div class="input-group">
+
+                            <label>Lisence</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input type="text" required name="txt_lisence"
+                                    placeholder="Enter your Lisence number" />
+                            </div>
+                        </div>
+                        <!-- PASSWORD -->
+
+                        <div class="input-group">
+                            <label>Password</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input type="password" required name="pswd_password" placeholder="Enter password"
+                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                    title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
+                            </div>
+                        </div>
+
+                        <!-- RE PASSWORD -->
+
+                        <div class="input-group full-width">
+                            <label>Re-Type Password</label>
+
+                            <div class="input-box">
+                                <i class="fa-solid fa-lock"></i>
+
+                                <input type="password" required name="pswd_repassword" placeholder="Re-enter password"
+                                    pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                    title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- BUTTONS -->
+
+                    <div class="btn-area">
+
+                        <input type="submit" name="btn_register" value="Register" class="btn btn-register" />
+
+                        <input type="reset" name="btn_cancel" value="Cancel" class="btn btn-reset" />
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</body>
+
+</html>
+
+<!-- AJAX -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+
+    $('#sel_district').change(function () {
+
+        var did = $(this).val();
+
+        var ur = "{% url 'Guest:ajaxplace' %}"
+
+        $.ajax({
+
+            url: ur,
+
+            data: { did: did },
+
+            success: function (data) {
+
+                $('#sel_place').html(data);
+
+            }
+
+        });
+
+    });
+
+</script>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}")
+    window.location = "{% url 'Guest:ScrapcenterReg' %}"
+</script>
+{% endif %}
+{% endblock content %}

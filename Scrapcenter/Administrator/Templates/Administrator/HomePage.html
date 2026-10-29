@@ -1,0 +1,339 @@
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .home-container { padding: 30px; }
+
+    .page-title-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+    .page-title-icon {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        width: 42px; height: 42px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        color: white; font-size: 20px;
+    }
+    .page-title-text { color: white; font-size: 22px; font-weight: 600; margin: 0; }
+    .page-subtitle { color: #6c7a96; font-size: 13px; margin: 2px 0 0; }
+
+    /* Stat Cards */
+    .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+        background: #191c24;
+        border-radius: 15px;
+        padding: 20px 18px;
+        display: flex; align-items: center; gap: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .stat-icon {
+        width: 50px; height: 50px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 22px; flex-shrink: 0;
+    }
+    .si-blue  { background: rgba(37,117,252,0.15); color: #2575fc; }
+    .si-green { background: rgba(40,167,69,0.15);  color: #28a745; }
+    .si-amber { background: rgba(255,193,7,0.15);  color: #ffc107; }
+    .si-red   { background: rgba(220,53,69,0.15);  color: #dc3545; }
+    .stat-label { font-size: 12px; color: #6c7a96; }
+    .stat-value { font-size: 26px; font-weight: 700; color: white; line-height: 1.2; }
+    .stat-delta { font-size: 11px; margin-top: 3px; }
+    .delta-up   { color: #28a745; }
+    .delta-down { color: #dc3545; }
+
+    /* Cards */
+    .home-card { background: #191c24; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+    .card-header-custom {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white; padding: 16px 20px;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .card-header-custom h4 { margin: 0; font-size: 15px; font-weight: 600; }
+    .card-header-custom .ml-auto { margin-left: auto; }
+    .home-card .card-body { padding: 20px; }
+
+    /* Table */
+    .table { color: white; }
+    .table thead { background: #2A3038; }
+    .table thead th { color: #a0aec0; font-size: 12px; border: none; padding: 10px 12px; }
+    .table tbody tr:hover { background: rgba(255,255,255,0.04); }
+    .table td { border-color: rgba(255,255,255,0.06); vertical-align: middle; color: #e2e8f0; }
+
+    /* Badges */
+    .badge-user    { background: rgba(37,117,252,0.2); color: #2575fc; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+    .badge-scrap   { background: rgba(40,167,69,0.2);  color: #28a745; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+    .badge-pending { background: rgba(255,193,7,0.2);  color: #ffc107; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+    .badge-approved{ background: rgba(40,167,69,0.2);  color: #28a745; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+    .badge-rejected{ background: rgba(220,53,69,0.2);  color: #dc3545; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+    .badge-live    { background: rgba(37,117,252,0.2);  color: #2575fc; padding: 3px 10px; border-radius: 20px; font-size: 11px; }
+
+    /* Two-col row */
+    .home-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 0; }
+
+    /* Activity */
+    .activity-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .activity-text { font-size: 13px; color: #e2e8f0; line-height: 1.45; }
+    .activity-time { font-size: 11px; color: #6c7a96; margin-top: 2px; }
+
+    /* Quick actions */
+    .qa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .qa-btn {
+        background: #2A3038; border: 1px solid #3e444d;
+        border-radius: 10px; padding: 10px 12px;
+        display: flex; align-items: center; gap: 8px;
+        color: #e2e8f0; font-size: 13px; text-decoration: none;
+        transition: background 0.15s;
+    }
+    .qa-btn:hover { background: #333b47; color: white; text-decoration: none; }
+    .qa-btn i { font-size: 16px; }
+
+    /* Summary */
+    .summary-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13px; }
+    .summary-row:last-child { border-bottom: none; }
+    .sum-label { color: #6c7a96; }
+    .sum-val   { color: white; font-weight: 600; }
+    .section-label { color: white; font-size: 13px; font-weight: 600; margin-bottom: 8px; }
+
+    /* Admin Profile Strip */
+    .admin-profile-strip {
+        background: #191c24;
+        border-radius: 15px;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border-left: 4px solid #2575fc;
+    }
+    .admin-avatar {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .admin-info-name { color: white; font-size: 16px; font-weight: 600; margin: 0; }
+    .admin-info-role { color: #6c7a96; font-size: 12px; margin: 2px 0 0; }
+    .admin-info-email { color: #2575fc; font-size: 12px; margin: 2px 0 0; }
+    .admin-badge {
+        margin-left: auto;
+        background: rgba(40,167,69,0.15);
+        color: #28a745;
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        display: flex; align-items: center; gap: 5px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="home-container">
+
+        <!-- Page Header -->
+        <div class="page-title-card">
+            <div class="page-title-icon">
+                <i class="mdi mdi-speedometer"></i>
+            </div>
+            <div>
+                <h3 class="page-title-text">Dashboard</h3>
+                <p class="page-subtitle">Welcome back, {{ admin.adminregistration_name }} — here's today's overview</p>
+            </div>
+        </div>
+
+        <!-- Admin Profile Strip -->
+        <div class="admin-profile-strip">
+            <div class="admin-avatar">
+                {{ admin.adminregistration_name|first|upper }}
+            </div>
+            <div>
+                <p class="admin-info-name">{{ admin.adminregistration_name }}</p>
+                <p class="admin-info-role">Administrator</p>
+                <p class="admin-info-email">{{ admin.adminregistration_email }}</p>
+            </div>
+            <div class="admin-badge">
+                <i class="mdi mdi-check-circle"></i> Active
+            </div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-icon si-blue"><i class="mdi mdi-account-multiple"></i></div>
+                <div>
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value">{{ total_users }}</div>
+                    <div class="stat-delta delta-up">&#8593; 12% this month</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon si-green"><i class="mdi mdi-recycle"></i></div>
+                <div>
+                    <div class="stat-label">Scrap Centers</div>
+                    <div class="stat-value">{{ total_scrapcenters }}</div>
+                    <div class="stat-delta delta-up">&#8593; 3 new this week</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon si-amber"><i class="mdi mdi-car"></i></div>
+                <div>
+                    <div class="stat-label">Vehicles Listed</div>
+                    <div class="stat-value">{{ total_vehicles }}</div>
+                    <div class="stat-delta delta-up">&#8593; 8% this month</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon si-red"><i class="mdi mdi-alert-circle"></i></div>
+                <div>
+                    <div class="stat-label">Pending Complaints</div>
+                    <div class="stat-value">{{ pending_complaints }}</div>
+                    <div class="stat-delta delta-down">&#9888; {{ pending_complaints }} unresolved</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verifications Table -->
+        <div class="home-card mb-4">
+            <div class="card-header-custom">
+                <i class="mdi mdi-clipboard-check" style="font-size:20px;"></i>
+                <h4>Recent Verifications</h4>
+                <span class="badge-live ml-auto">Live</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>District</th>
+                                <th>Submitted</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in recent_verifications %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>
+                                    <i class="mdi mdi-account text-primary"></i>
+                                    {{ item.name }}
+                                </td>
+                                <td>
+                                    <span class="{% if item.type == 'Scrap Center' %}badge-scrap{% else %}badge-user{% endif %}">
+                                        {{ item.type }}
+                                    </span>
+                                </td>
+                                <td>{{ item.district }}</td>
+                                <td>{{ item.date }}</td>
+                                <td>
+                                    <span class="
+                                        {% if item.status == 'Approved' %}badge-approved
+                                        {% elif item.status == 'Pending' %}badge-pending
+                                        {% else %}badge-rejected{% endif %}">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No recent verifications</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity + Quick Actions -->
+        <div class="home-row2">
+
+            <div class="home-card">
+                <div class="card-header-custom">
+                    <i class="mdi mdi-clock-outline" style="font-size:20px;"></i>
+                    <h4>Recent Activity</h4>
+                </div>
+                <div class="card-body">
+                    {% for act in recent_activity %}
+                    <div class="activity-item">
+                        <div class="activity-dot si-{{ act.color }}">
+                            <i class="mdi mdi-{{ act.icon }}"></i>
+                        </div>
+                        <div>
+                            <div class="activity-text">{{ act.message }}</div>
+                            <div class="activity-time">{{ act.time }}</div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">No recent activity</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="home-card">
+                <div class="card-header-custom">
+                    <i class="mdi mdi-lightning-bolt" style="font-size:20px;"></i>
+                    <h4>Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="qa-grid">
+                        <a href="{% url 'Administrator:userlist' %}" class="qa-btn">
+                            <i class="mdi mdi-account-check"></i> Verify Users
+                        </a>
+                        <a href="{% url 'Administrator:scrapcenterlist' %}" class="qa-btn">
+                            <i class="mdi mdi-recycle"></i> Scrap Centers
+                        </a>
+                        <a href="{% url 'Administrator:Viewcomplaint' %}" class="qa-btn">
+                            <i class="mdi mdi-alert"></i> Complaints
+                        </a>
+                        <a href="{% url 'Administrator:ViewFeedback' %}" class="qa-btn">
+                            <i class="mdi mdi-message-text"></i> Feedback
+                        </a>
+                        <a href="{% url 'Administrator:District' %}" class="qa-btn">
+                            <i class="mdi mdi-map-marker"></i> Districts
+                        </a>
+                        <a href="{% url 'Administrator:Brand' %}" class="qa-btn">
+                            <i class="mdi mdi-tag"></i> Brands
+                        </a>
+                        <a href="{% url 'Administrator:Category' %}" class="qa-btn">
+                            <i class="mdi mdi-car"></i> Categories
+                        </a>
+                        <a href="{% url 'Administrator:Model' %}" class="qa-btn">
+                            <i class="mdi mdi-car-sports"></i> Models
+                        </a>
+                    </div>
+
+                    <div class="section-label">Summary</div>
+                    <div class="summary-row">
+                        <span class="sum-label">Districts</span>
+                        <span class="sum-val">{{ total_districts }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="sum-label">Places</span>
+                        <span class="sum-val">{{ total_places }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="sum-label">Brands</span>
+                        <span class="sum-val">{{ total_brands }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="sum-label">Models</span>
+                        <span class="sum-val">{{ total_models }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

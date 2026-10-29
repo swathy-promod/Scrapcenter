@@ -1,0 +1,415 @@
+District
+
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+:root {
+  --bg-base:    #0f1117;
+  --bg-card:    #1a1d27;
+  --bg-card2:   #21253a;
+  --bg-input:   #13151f;
+  --bg-hover:   #1e2235;
+  --border:     #2a2d3e;
+  --border-hi:  #3d4160;
+  --accent1:    #7c6ff7;
+  --accent2:    #a78bfa;
+  --accent-glow: rgba(124,111,247,0.18);
+  --text-hi:    #e8eaf6;
+  --text-md:    #9da5c0;
+  --text-lo:    #555c7a;
+  --green:      #34d399;
+  --green-bg:   rgba(52,211,153,0.1);
+  --green-bdr:  rgba(52,211,153,0.25);
+  --red:        #f87171;
+  --red-bg:     rgba(248,113,113,0.1);
+  --red-bdr:    rgba(248,113,113,0.25);
+  --amber:      #fbbf24;
+  --amber-bg:   rgba(251,191,36,0.1);
+  --indigo:     #818cf8;
+  --indigo-bg:  rgba(129,140,248,0.1);
+  --indigo-bdr: rgba(129,140,248,0.25);
+}
+
+.dm { padding: 28px 24px; background: var(--bg-base); min-height: 100vh; }
+
+/* ── Banner ── */
+.dm-banner {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+  border: 1px solid #3730a3;
+  border-radius: 16px;
+  padding: 24px 30px;
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 28px;
+  position: relative; overflow: hidden;
+}
+.dm-banner::before {
+  content: '';
+  position: absolute; right: -30px; top: -30px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(124,111,247,0.12);
+}
+.dm-banner::after {
+  content: '';
+  position: absolute; right: 80px; bottom: -50px;
+  width: 110px; height: 110px; border-radius: 50%;
+  background: rgba(167,139,250,0.07);
+}
+.dm-banner-icon {
+  width: 52px; height: 52px;
+  background: rgba(124,111,247,0.2);
+  border: 1px solid rgba(124,111,247,0.35);
+  border-radius: 13px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.dm-banner-icon .mdi { font-size: 1.8rem; color: var(--accent2); }
+.dm-banner-text h2 { color: var(--text-hi); font-size: 1.3rem; font-weight: 700; margin: 0 0 4px; }
+.dm-banner-text p  { color: var(--text-md); margin: 0; font-size: 0.88rem; }
+
+/* ── Layout ── */
+.dm-layout { display: grid; grid-template-columns: 320px 1fr; gap: 22px; align-items: start; }
+@media (max-width: 900px) { .dm-layout { grid-template-columns: 1fr; } }
+
+/* ── Form card ── */
+.dm-form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  position: sticky; top: 24px;
+}
+.dm-form-header {
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  border-bottom: 1px solid #3730a3;
+  padding: 15px 20px;
+  display: flex; align-items: center; gap: 9px;
+}
+.dm-form-header .mdi { font-size: 1.15rem; color: var(--accent2); }
+.dm-form-header h5 { color: var(--text-hi); font-size: 0.92rem; font-weight: 700; margin: 0; }
+
+.dm-form-body { padding: 22px 20px; }
+
+.dm-form-group { margin-bottom: 18px; }
+.dm-form-group label {
+  display: block; font-size: 0.72rem; font-weight: 700;
+  color: var(--text-md); text-transform: uppercase;
+  letter-spacing: 0.8px; margin-bottom: 8px;
+}
+.dm-input-wrap {
+  display: flex; align-items: center;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: 10px; overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.dm-input-wrap:focus-within {
+  border-color: var(--accent1);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.dm-input-wrap .mdi { padding: 0 11px; font-size: 1rem; color: var(--text-lo); }
+.dm-input-wrap input[type="text"] {
+  flex: 1; border: none; background: transparent;
+  padding: 10px 12px 10px 0; font-size: 0.88rem;
+  color: var(--text-hi); outline: none;
+}
+.dm-input-wrap input[type="text"]::placeholder { color: var(--text-lo); }
+
+.dm-submit-btn {
+  width: 100%; padding: 11px;
+  background: linear-gradient(135deg, var(--accent1), #5b21b6);
+  color: #fff; border: none; border-radius: 10px;
+  font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: opacity 0.15s, transform 0.12s, box-shadow 0.15s;
+  box-shadow: 0 4px 16px rgba(124,111,247,0.3);
+  letter-spacing: 0.3px;
+}
+.dm-submit-btn:hover {
+  opacity: 0.9; transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(124,111,247,0.4);
+}
+.dm-submit-btn .mdi { font-size: 1.05rem; }
+
+.dm-cancel-link {
+  display: block; text-align: center; margin-top: 12px;
+  font-size: 0.8rem; color: var(--text-lo); text-decoration: none;
+  transition: color 0.13s;
+}
+.dm-cancel-link:hover { color: var(--text-md); text-decoration: none; }
+
+/* ── Divider inside form ── */
+.dm-divider {
+  height: 1px; background: var(--border);
+  margin: 18px 0;
+}
+
+/* ── Table card ── */
+.dm-table-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.dm-table-header {
+  padding: 17px 22px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+}
+.dm-table-title {
+  font-size: 0.98rem; font-weight: 700; color: var(--text-hi);
+  display: flex; align-items: center; gap: 9px;
+}
+.dm-table-title .mdi { font-size: 1.15rem; color: var(--accent1); }
+.dm-count-badge {
+  background: var(--indigo-bg); color: var(--indigo);
+  border: 1px solid var(--indigo-bdr);
+  font-size: 0.7rem; font-weight: 700;
+  padding: 2px 9px; border-radius: 20px;
+}
+
+.dm-search {
+  display: flex; align-items: center;
+  background: var(--bg-input); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 5px 12px; gap: 7px;
+  transition: border-color 0.15s;
+}
+.dm-search:focus-within { border-color: var(--accent1); }
+.dm-search input {
+  border: none; background: transparent; outline: none;
+  font-size: 0.83rem; color: var(--text-hi); width: 170px;
+}
+.dm-search input::placeholder { color: var(--text-lo); }
+.dm-search .mdi { color: var(--text-lo); font-size: 1rem; }
+
+.dm-table-wrap { overflow-x: auto; }
+.dm-table { width: 100%; border-collapse: collapse; }
+
+.dm-table thead tr {
+  background: linear-gradient(135deg, #1e1b4b, #312e81);
+  border-bottom: 1px solid #3730a3;
+}
+.dm-table thead th {
+  color: rgba(167,139,250,0.85); font-size: 0.7rem; font-weight: 700;
+  padding: 12px 20px; text-align: left; white-space: nowrap;
+  letter-spacing: 0.8px; text-transform: uppercase; border: none;
+}
+
+.dm-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+.dm-table tbody tr:hover { background: var(--bg-hover); }
+.dm-table tbody tr:last-child { border-bottom: none; }
+.dm-table tbody td { padding: 13px 20px; vertical-align: middle; font-size: 0.875rem; border: none; }
+
+.dm-sno {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--bg-card2); border: 1px solid var(--border-hi);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: var(--text-lo);
+}
+
+.dm-name-cell { display: flex; align-items: center; gap: 11px; }
+.dm-name-icon {
+  width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+  background: var(--indigo-bg);
+  border: 1px solid var(--indigo-bdr);
+  display: flex; align-items: center; justify-content: center;
+}
+.dm-name-icon .mdi { font-size: 1rem; color: var(--indigo); }
+.dm-name-text { font-weight: 600; color: var(--text-hi); font-size: 0.88rem; }
+
+/* Action buttons */
+.dm-actions { display: flex; gap: 7px; }
+.dm-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border-radius: 8px; font-size: 0.72rem;
+  font-weight: 700; text-decoration: none;
+  transition: all 0.14s; white-space: nowrap;
+}
+.dm-btn-edit   { background: var(--indigo-bg); color: var(--indigo); border: 1px solid var(--indigo-bdr); }
+.dm-btn-edit:hover   { background: var(--indigo); color: #fff; border-color: var(--indigo); text-decoration: none; }
+.dm-btn-delete { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bdr); }
+.dm-btn-delete:hover { background: var(--red); color: #fff; border-color: var(--red); text-decoration: none; }
+
+/* Empty */
+.dm-empty { text-align: center; padding: 52px 20px; }
+.dm-empty .mdi { font-size: 3rem; color: var(--text-lo); display: block; margin-bottom: 10px; }
+.dm-empty p { color: var(--text-lo); font-size: 0.88rem; margin: 0; }
+
+/* Footer */
+.dm-card-footer { padding: 13px 22px; border-top: 1px solid var(--border); }
+.dm-rowcount { font-size: 0.77rem; color: var(--text-lo); }
+
+.dm-page-footer { margin-top: 26px; text-align: center; font-size: 0.77rem; color: var(--text-lo); }
+.dm-page-footer a { color: var(--accent1); text-decoration: none; }
+.dm-page-footer a:hover { color: var(--accent2); }
+
+/* Scrollbar */
+.dm-table-wrap::-webkit-scrollbar { height: 5px; }
+.dm-table-wrap::-webkit-scrollbar-track { background: var(--bg-card); }
+.dm-table-wrap::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 4px; }
+</style>
+
+<div class="dm">
+
+  <!-- Banner -->
+  <div class="dm-banner">
+    <div class="dm-banner-icon">
+      <span class="mdi mdi-map-marker-radius"></span>
+    </div>
+    <div class="dm-banner-text">
+      <h2>District Management</h2>
+      <p>Add new districts and manage existing location entries.</p>
+    </div>
+  </div>
+
+  <!-- Layout -->
+  <div class="dm-layout">
+
+    <!-- Form Card -->
+    <div class="dm-form-card">
+      <div class="dm-form-header">
+        <span class="mdi mdi-plus-circle-outline"></span>
+        <h5>{% if data %}Edit District{% else %}Add New District{% endif %}</h5>
+      </div>
+      <div class="dm-form-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="dm-form-group">
+            <label>District Name</label>
+            <div class="dm-input-wrap">
+              <span class="mdi mdi-map-marker-outline"></span>
+              <input type="text" required name="txtname"
+                value="{% if data %}{{ data.district_name }}{% endif %}"
+                placeholder="e.g. Kozhikode">
+            </div>
+          </div>
+          <button type="submit" name="btn_submit" class="dm-submit-btn">
+            <span class="mdi {% if data %}mdi-content-save-edit-outline{% else %}mdi-plus-circle-outline{% endif %}"></span>
+            {% if data %}Update District{% else %}Add District{% endif %}
+          </button>
+        </form>
+
+        {% if data %}
+        <a href="{% url 'Administrator:District' %}" class="dm-cancel-link">
+          <span class="mdi mdi-arrow-left" style="vertical-align:-1px;"></span> Cancel &amp; go back
+        </a>
+        {% endif %}
+
+        <div class="dm-divider"></div>
+
+        <!-- Mini info -->
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;">
+          <span class="mdi mdi-information-outline" style="color:var(--accent1);font-size:1.1rem;"></span>
+          <span style="font-size:0.78rem;color:var(--text-md);line-height:1.5;">
+            Districts are used to group places for users and scrap centers during registration.
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="dm-table-card">
+      <div class="dm-table-header">
+        <div class="dm-table-title">
+          <span class="mdi mdi-map-legend"></span>
+          All Districts
+          <span class="dm-count-badge" id="distCount">0</span>
+        </div>
+        <div class="dm-search">
+          <span class="mdi mdi-magnify"></span>
+          <input type="text" id="searchInput" placeholder="Search districts…" onkeyup="filterTable()">
+        </div>
+      </div>
+
+      <div class="dm-table-wrap">
+        <table class="dm-table" id="distTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>District Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for i in district %}
+            <tr>
+              <td><span class="dm-sno">{{ forloop.counter }}</span></td>
+              <td>
+                <div class="dm-name-cell">
+                  <div class="dm-name-icon">
+                    <span class="mdi mdi-map-marker"></span>
+                  </div>
+                  <span class="dm-name-text">{{ i.district_name }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="dm-actions">
+                  <a href="{% url 'Administrator:Districtedit' i.id %}" class="dm-btn dm-btn-edit">
+                    <span class="mdi mdi-pencil"></span>Edit
+                  </a>
+                  <a href="{% url 'Administrator:Districtdelete' i.id %}"
+                    class="dm-btn dm-btn-delete"
+                    onclick="return confirm('Delete {{ i.district_name }}?')">
+                    <span class="mdi mdi-trash-can-outline"></span>Delete
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="3">
+                <div class="dm-empty">
+                  <span class="mdi mdi-map-marker-off"></span>
+                  <p>No districts added yet. Use the form to add one.</p>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="dm-card-footer">
+        <span class="dm-rowcount" id="rowCount"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="dm-page-footer">
+    Copyright &copy; bootstrapdash.com 2020 &nbsp;&middot;&nbsp;
+    <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Free Bootstrap admin templates</a>
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', updateCounts);
+
+  function getDataRows() {
+    return [...document.querySelectorAll('#distTable tbody tr')]
+      .filter(function(r){ return !r.querySelector('td[colspan]'); });
+  }
+
+  function updateCounts() {
+    var rows = getDataRows();
+    var visible = rows.filter(function(r){ return r.style.display !== 'none'; }).length;
+    document.getElementById('distCount').textContent = rows.length;
+    document.getElementById('rowCount').textContent = 'Showing ' + visible + ' of ' + rows.length + ' district(s)';
+  }
+
+  function filterTable() {
+    var q = document.getElementById('searchInput').value.toLowerCase();
+    var visible = 0;
+    getDataRows().forEach(function(r) {
+      var match = r.textContent.toLowerCase().includes(q);
+      r.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    var total = getDataRows().length;
+    document.getElementById('distCount').textContent = visible;
+    document.getElementById('rowCount').textContent = 'Showing ' + visible + ' of ' + total + ' district(s)';
+  }
+</script>
+
+{% endblock content %}

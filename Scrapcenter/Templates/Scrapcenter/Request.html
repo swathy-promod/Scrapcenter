@@ -1,0 +1,214 @@
+{% extends 'Guest/mid.html' %}
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#020617,#0f172a,#111827);
+    overflow-x: hidden;
+    color: white;
+}
+
+.rq-section{
+    min-height: 88vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.rq-section::before{
+    content: "";
+    position: absolute;
+    width: 420px; height: 420px;
+    background: rgba(37,99,235,0.35);
+    border-radius: 50%;
+    top: -120px; left: -120px;
+    filter: blur(120px);
+}
+
+.rq-section::after{
+    content: "";
+    position: absolute;
+    width: 350px; height: 350px;
+    background: rgba(168,85,247,0.28);
+    border-radius: 50%;
+    bottom: -100px; right: -100px;
+    filter: blur(120px);
+}
+
+.rq-card{
+    width: 100%;
+    max-width: 450px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(16px);
+    border-radius: 26px;
+    padding: 45px 38px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+    animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(25px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.rq-icon{
+    width: 68px; height: 68px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 20px rgba(59,130,246,0.35);
+}
+
+.rq-title{
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.rq-title h2{ font-size: 32px; font-weight: 700; margin-bottom: 6px; }
+.rq-title p{ color: rgba(255,255,255,0.65); font-size: 14px; }
+
+.form-group{ margin-bottom: 20px; }
+
+.form-group label{
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+}
+
+.form-group label i{ margin-right: 7px; font-size: 15px; color: #60a5fa; }
+
+.form-control{
+    width: 100%;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    padding: 0 16px;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder{ color: rgba(255,255,255,0.4); }
+
+.form-control:focus{
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 18px rgba(59,130,246,0.3);
+}
+
+textarea.form-control{
+    height: 100px;
+    padding: 12px 16px;
+    resize: vertical;
+}
+
+.hint{
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 6px;
+}
+
+.divider{
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin: 24px 0;
+}
+
+.btn-submit{
+    width: 100%;
+    height: 52px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-submit:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(37,99,235,0.45);
+}
+
+@media(max-width:576px){
+    .rq-card{ padding: 35px 22px; }
+    .rq-title h2{ font-size: 26px; }
+}
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<section class="rq-section">
+    <div class="rq-card">
+
+        <div class="rq-title">
+            <div class="rq-icon">
+                <i class="ti ti-tag" style="color:#fff; font-size:28px;"></i>
+            </div>
+            <h2>My Request</h2>
+            <p>Submit your scrap offer for this vehicle</p>
+        </div>
+
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <!-- OFFERED PRICE -->
+            <div class="form-group">
+                <label><i class="ti ti-currency-rupee"></i>Offered Price</label>
+                <input type="number" class="form-control"
+                       name="txt_prize"
+                       placeholder="Enter your offered price" required>
+                <p class="hint">Enter the amount you are willing to pay for this vehicle</p>
+            </div>
+
+            <!-- REMARK -->
+            <div class="form-group">
+                <label><i class="ti ti-message"></i>Remark</label>
+                <textarea class="form-control" name="txt_remark"
+                          placeholder="Add any remarks or notes..." required></textarea>
+            </div>
+
+            <hr class="divider">
+
+            <button type="submit" name="btn_submit" class="btn-submit">
+                <i class="ti ti-send"></i>
+                Submit Request
+            </button>
+
+        </form>
+    </div>
+</section>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Scrapcenter:MyRequest' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,240 @@
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .reply-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 30px;
+    }
+
+    .reply-card {
+        background: #191c24;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        overflow: hidden;
+        width: 100%;
+        max-width: 520px;
+    }
+
+    .reply-card-header {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .reply-card-header i {
+        font-size: 22px;
+        color: white;
+    }
+
+    .reply-card-header h4 {
+        margin: 0;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .reply-card-header p {
+        margin: 2px 0 0;
+        color: rgba(255,255,255,0.7);
+        font-size: 12px;
+    }
+
+    .reply-card-body {
+        padding: 28px 24px;
+    }
+
+    /* COMPLAINT DETAIL BOX */
+    .complaint-detail {
+        background: #2a3038;
+        border: 1px solid #3e444d;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 22px;
+    }
+
+    .complaint-detail-label {
+        color: #a0aec0;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+
+    .complaint-detail-value {
+        color: white;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .complaint-detail-row {
+        margin-bottom: 12px;
+    }
+
+    .complaint-detail-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .sender-badge {
+        background: rgba(37,117,252,.15);
+        color: #4da3ff;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    /* FORM */
+    .form-group label {
+        color: #a0aec0;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .reply-input {
+        width: 100%;
+        background: #2a3038;
+        border: 1px solid #3e444d;
+        border-radius: 10px;
+        padding: 12px 16px;
+        color: white;
+        font-size: 14px;
+        outline: none;
+        transition: border 0.2s;
+        resize: vertical;
+        min-height: 110px;
+        font-family: inherit;
+    }
+
+    .reply-input::placeholder { color: #6c7a96; }
+
+    .reply-input:focus {
+        border-color: #2575fc;
+        background: #2e3440;
+    }
+
+    .btn-submit {
+        width: 100%;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 13px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: opacity 0.2s, transform 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-submit:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+
+    .btn-cancel {
+        width: 100%;
+        background: #2a3038;
+        color: #a0aec0;
+        border: 1px solid #3e444d;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 10px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        transition: background 0.2s;
+    }
+
+    .btn-cancel:hover {
+        background: #333b47;
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="reply-container">
+    <div class="reply-card">
+
+        <div class="reply-card-header">
+            <i class="mdi mdi-reply"></i>
+            <div>
+                <h4>Send Reply</h4>
+                <p>Respond to the complaint</p>
+            </div>
+        </div>
+
+        <div class="reply-card-body">
+
+            <!-- COMPLAINT DETAILS -->
+            <div class="complaint-detail">
+                <div class="complaint-detail-row">
+                    <div class="complaint-detail-label">Sent By</div>
+                    <div class="complaint-detail-value">
+                        {% if complaint.user %}
+                            <span class="sender-badge">
+                                <i class="mdi mdi-account"></i>
+                                {{ complaint.user.userregistration_name }}
+                            </span>
+                        {% elif complaint.scrap %}
+                            <span class="sender-badge" style="background: rgba(16,185,129,.15); color: #10b981;">
+                                <i class="mdi mdi-store"></i>
+                                {{ complaint.scrap.scrapcenterreg_name }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="complaint-detail-row">
+                    <div class="complaint-detail-label">Title</div>
+                    <div class="complaint-detail-value">{{ complaint.complaint_title }}</div>
+                </div>
+                <div class="complaint-detail-row">
+                    <div class="complaint-detail-label">Complaint</div>
+                    <div class="complaint-detail-value">{{ complaint.complaint_content }}</div>
+                </div>
+            </div>
+
+            <!-- REPLY FORM -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Your Reply</label>
+                    <textarea
+                        class="reply-input"
+                        name="txt_reply"
+                        placeholder="Type your reply here..."
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" name="btn_submit" class="btn-submit">
+                    <i class="mdi mdi-send"></i> Send Reply
+                </button>
+
+                <a href="{% url 'Administrator:Viewcomplaint' %}" class="btn-cancel">
+                    Cancel
+                </a>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

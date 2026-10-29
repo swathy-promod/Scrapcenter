@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScrapHere</title>
+
+    <link rel="stylesheet" href="{% static 'Main/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0b1d3a, #111827, #1e1b4b);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 500px; height: 500px;
+            background: rgba(79, 140, 255, 0.15);
+            border-radius: 50%;
+            top: -100px; left: -100px;
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            width: 500px; height: 500px;
+            background: rgba(168, 85, 247, 0.15);
+            border-radius: 50%;
+            bottom: -100px; right: -100px;
+            filter: blur(100px);
+            z-index: -1;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            padding: 18px 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .logo { text-decoration: none; font-size: 34px; font-weight: 700; color: white; letter-spacing: 1px; }
+        .logo span { color: #3b82f6; }
+
+        .nav-links { display: flex; align-items: center; gap: 35px; }
+
+        .nav-links a {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.80);
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s ease;
+        }
+
+        .nav-links a:hover { color: #60a5fa; }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            width: 0%; height: 2px;
+            left: 0; bottom: -6px;
+            background: #3b82f6;
+            transition: 0.3s ease;
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-btn {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            border-radius: 14px !important;
+            color: white !important;
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .nav-btn::after { display: none; }
+        .nav-btn:hover { transform: translateY(-2px); }
+
+        .menu-toggle { display: none; font-size: 24px; color: white; cursor: pointer; }
+
+        @media(max-width:992px) {
+            .navbar { padding: 18px 25px; }
+            .menu-toggle { display: block; }
+            .nav-links {
+                position: absolute; top: 100%; left: 0;
+                width: 100%;
+                background: #0f172a;
+                flex-direction: column;
+                align-items: center;
+                gap: 22px;
+                padding: 25px 0;
+                display: none;
+            }
+            .nav-links.active { display: flex; }
+        }
+
+        /* ===== GENERAL ===== */
+        .banner_section { padding: 100px 0; }
+
+        .banner_taital { font-size: 70px; font-weight: 700; line-height: 80px; }
+        .banner_text { margin-top: 20px; color: #d1d5db; }
+
+        .glass-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: 0.3s;
+        }
+
+        .glass-box:hover { transform: translateY(-5px); }
+
+        .banner_img img { width: 100%; }
+
+        .custom-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #4f8cff, #2563eb);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 14px;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .custom-btn:hover {
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 0 20px rgba(79, 140, 255, 0.6);
+            text-decoration: none;
+        }
+
+        section { padding: 80px 0; }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 45px;
+            font-weight: 700;
+        }
+
+        .about_img img, .models_img img, .blog_img img {
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        .card_title { font-size: 26px; font-weight: 700; margin-bottom: 12px; }
+
+        .stats { text-align: center; }
+        .stats h1 { font-size: 50px; font-weight: 700; color: #4f8cff; }
+
+        .blog_box { margin-top: 20px; }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            width: 100%;
+            margin-top: 80px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 70px;
+        }
+
+        .footer-container {
+            width: 90%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 45px;
+            padding-bottom: 50px;
+        }
+
+        .footer-box h3 { font-size: 24px; margin-bottom: 20px; font-weight: 600; }
+        .footer-box p { color: rgba(255, 255, 255, 0.70); line-height: 1.8; font-size: 14px; }
+
+        .footer-links { display: flex; flex-direction: column; gap: 14px; }
+
+        .footer-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 14px;
+            transition: 0.3s ease;
+        }
+
+        .footer-links a:hover { color: #60a5fa; transform: translateX(5px); }
+
+        .social-icons { display: flex; gap: 14px; margin-top: 20px; }
+
+        .social-icons a {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .social-icons a:hover { background: #2563eb; transform: translateY(-4px); }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 18px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 14px;
+        }
+
+        @media(max-width:768px) {
+            .banner_taital { font-size: 45px; line-height: 55px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <a href="#" class="logo"><span>Scrap</span>Here</a>
+
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </div>
+
+        <div class="nav-links" id="navMenu">
+            <a href="{% url 'Guest:index' %}">HOME</a>
+            <a href="#about">ABOUT</a>
+            <a href="#contact">CONTACT</a>
+            <a href="{% url 'Guest:index' %}" class="nav-btn">ScrapHere</a>
+            <a href="{% url 'Guest:Login' %}">LOGIN</a>
+            <a href="{% url 'Guest:userregistration' %}">USER REGISTRATION</a>
+            <a href="{% url 'Guest:ScrapcenterReg' %}">SCRAPCENTER REGISTRATION</a>
+        </div>
+    </nav>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("navMenu").classList.toggle("active");
+        }
+    </script>
+
+    <!-- ===== BANNER ===== -->
+    <section class="banner_section">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-md-6" align="center">
+                    <div class="glass-box">
+                        <h1 class="banner_taital">
+                            Scrap Your<br>Car Today
+                        </h1>
+                        <p class="banner_text">
+                            Turn your old or damaged vehicle into instant cash. Fast pickup, fair valuation, and eco-friendly recycling — all in one place.
+                        </p>
+                        <a href="{% url 'Guest:userregistration' %}" class="custom-btn">Get Started</a>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="banner_img">
+                        <img src="{% static 'Main/images/bigb.png' %}" alt="Scrap car pickup">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about">
+        <div class="container">
+            <h1 class="section-title">About Us</h1>
+            <div class="row align-items-center">
+
+                <div class="col-md-6">
+                    <div class="about_img">
+                        <img src="{% static 'Main/images/yas.jpg' %}" alt="About ScrapHere">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="glass-box">
+                        <h3>Kerala's Trusted Car Scrapping Platform</h3>
+                        <p class="mt-4">
+                            ScrapHere connects vehicle owners with certified scrap centres across Kerala. We handle everything — from doorstep pickup to proper dismantling and recycling — ensuring you get the best value for your end-of-life vehicle while keeping the environment clean.
+                        </p>
+                        <a href="#" class="custom-btn">Learn More</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section>
+        <div class="container">
+            <h1 class="section-title">How It Works</h1>
+            <div class="row">
+
+                <div class="col-md-4 mb-4">
+                    <div class="glass-box">
+                        <div class="models_img">
+                            <img src="{% static 'Main/images/car-key-handover-stockcake.jpg' %}" alt="Submit vehicle details">
+                        </div>
+                        <h3 class="card_title mt-4">1. Submit Your Vehicle</h3>
+                        <p>Register and enter your car's details to receive an instant valuation from nearby scrap centres.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="glass-box">
+                        <div class="models_img">
+                            <img src="{% static 'Main/images/car.jpg' %}" alt="Free doorstep pickup">
+                        </div>
+                        <h3 class="card_title mt-4">2. Free Doorstep Pickup</h3>
+                        <p>We arrange a convenient collection at no extra charge, anywhere across Kerala.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="glass-box">
+                        <div class="models_img">
+                            <img src="{% static 'Main/images/cash.jpg' %}" alt="Instant payment">
+                        </div>
+                        <h3 class="card_title mt-4">3. Get Paid Instantly</h3>
+                        <p>Receive same-day payment directly to your bank account once the vehicle is collected.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-3 mb-4">
+                    <div class="glass-box stats">
+                        <h1>8,200+</h1>
+                        <p>Vehicles Scrapped</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="glass-box stats">
+                        <h1>120+</h1>
+                        <p>Certified Scrap Centres</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="glass-box stats">
+                        <h1>99%</h1>
+                        <p>Customer Satisfaction</p>
+                    </div>
+                </div>
+
+                <div class="col-md-3 mb-4">
+                    <div class="glass-box stats">
+                        <h1>14</h1>
+                        <p>Districts Covered</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ACCEPTED VEHICLES ===== -->
+    <section>
+        <div class="container">
+            <h1 class="section-title">We Accept All Vehicles</h1>
+            <div class="row">
+
+                <div class="col-md-4 mb-4">
+                    <div class="glass-box">
+                        <div class="blog_img">
+                            <img src="{% static 'Main/images/old.jpg' %}" alt="Old cars">
+                        </div>
+                        <div class="blog_box">
+                            <h3>Old &amp; Aged Cars</h3>
+                            <p class="mt-2">Vehicles over 15 years old that are no longer roadworthy or economical to maintain.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="glass-box">
+                        <div class="blog_img">
+                            <img src="{% static 'Main/images/acci.jpg' %}" alt="Accident damaged cars">
+                        </div>
+                        <div class="blog_box">
+                            <h3>Accident Damaged Cars</h3>
+                            <p class="mt-2">Vehicles written off by insurance or severely damaged in accidents — we take them all.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="glass-box">
+                        <div class="blog_img">
+                            <img src="{% static 'Main/images/bmw.png' %}" alt="Non-running vehicles">
+                        </div>
+                        <div class="blog_box">
+                            <h3>Non-Running Vehicles</h3>
+                            <p class="mt-2">Engine failure, transmission issues, flood damage — we collect and recycle responsibly.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <div class="footer-box">
+                <h3><span style="color:#3b82f6">Scrap</span>Here</h3>
+                <p>
+                    ScrapHere is Kerala's trusted online platform for scrapping old, damaged, and end-of-life vehicles. Fast valuations, free pickup, instant payment.
+                </p>
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-facebook"></i></a>
+                    <a href="#"><i class="fa fa-twitter"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                    <a href="#"><i class="fa fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-box">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="{% url 'Guest:index' %}">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#contact">Contact</a>
+                    <a href="{% url 'Guest:Login' %}">Login</a>
+                </div>
+            </div>
+
+            <div class="footer-box">
+                <h3>Registrations</h3>
+                <div class="footer-links">
+                    <a href="{% url 'Guest:userregistration' %}">User Registration</a>
+                    <a href="{% url 'Guest:ScrapcenterReg' %}">Scrapcenter Registration</a>
+                </div>
+            </div>
+
+            <div class="footer-box" id="contact">
+                <h3>Contact Us</h3>
+                <div class="footer-links">
+                    <a href="#"><i class="fa fa-phone"></i>&nbsp; +91 98765 43210</a>
+                    <a href="#"><i class="fa fa-envelope"></i>&nbsp; support@scraphere.in</a>
+                    <a href="#"><i class="fa fa-map-marker"></i>&nbsp; Kozhikode, Kerala, India</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2026 ScrapHere. All Rights Reserved.
+        </div>
+
+    </footer>
+
+</body>
+</html>

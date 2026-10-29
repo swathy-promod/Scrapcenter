@@ -1,0 +1,431 @@
+{% extends 'Guest/nav.html' %}
+{% load static %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaints - ScrapHere</title>
+
+    <link rel="stylesheet" href="{% static 'Main/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(135deg,
+                    rgba(11, 29, 58, 0.93),
+                    rgba(17, 24, 39, 0.89),
+                    rgba(30, 27, 75, 0.93)),
+                url("{% static 'Main/images/images.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 600px; height: 600px;
+            background: rgba(79, 140, 255, 0.12);
+            border-radius: 50%;
+            top: -150px; left: -150px;
+            filter: blur(120px);
+            z-index: 0; pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px; height: 600px;
+            background: rgba(168, 85, 247, 0.12);
+            border-radius: 50%;
+            bottom: -150px; right: -150px;
+            filter: blur(120px);
+            z-index: 0; pointer-events: none;
+        }
+
+        /* PAGE */
+        .page-section {
+            padding: 60px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-box {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.11);
+            backdrop-filter: blur(22px);
+            border-radius: 24px;
+            padding: 38px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i { color: #4f8cff; }
+
+        /* FORM */
+        .form-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 7px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: border 0.2s;
+            margin-bottom: 18px;
+        }
+
+        .form-input::placeholder { color: rgba(255,255,255,0.35); }
+        .form-input:focus { border-color: #3b82f6; background: rgba(255,255,255,0.10); }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37,99,235,0.5);
+        }
+
+        /* TABLE */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .custom-table thead tr {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .custom-table th {
+            padding: 13px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .custom-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.85);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .badge-pending {
+            background: rgba(255,193,7,0.15);
+            color: #ffc107;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-replied {
+            background: rgba(40,167,69,0.15);
+            color: #28a745;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .btn-delete {
+            background: rgba(220,53,69,0.15);
+            color: #dc3545;
+            border: 1px solid rgba(220,53,69,0.3);
+            border-radius: 8px;
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-delete:hover {
+            background: rgba(220,53,69,0.3);
+            color: #ff6b7a;
+            text-decoration: none;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: rgba(255,255,255,0.35);
+            padding: 30px;
+            font-size: 14px;
+        }
+
+        /* FOOTER */
+        .footer {
+            width: 100%;
+            margin-top: 60px;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding: 28px;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer span { color: #4f8cff; }
+
+        /* ===================== SUCCESS POPUP ===================== */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-box {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            padding: 44px 40px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: popIn 0.35s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.85); opacity: 0; }
+            to   { transform: scale(1);    opacity: 1; }
+        }
+
+        .popup-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.45);
+        }
+
+        .popup-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .popup-msg {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+            margin-bottom: 28px;
+        }
+
+        .popup-btn {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 36px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.3s ease;
+        }
+
+        .popup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================== SUCCESS POPUP ===================== -->
+    {% if success %}
+    <div class="popup-overlay active" id="successPopup">
+        <div class="popup-box">
+            <div class="popup-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <div class="popup-title">Complaint Submitted!</div>
+            <div class="popup-msg">
+                Your complaint has been sent successfully.<br>
+                We'll get back to you as soon as possible.
+            </div>
+            <button class="popup-btn" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+    {% endif %}
+
+    <section class="page-section">
+        <div class="container">
+
+            <!-- COMPLAINT FORM -->
+            <div class="glass-box">
+                <div class="section-title">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Submit a Complaint
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <label class="form-label">Complaint Title</label>
+                    <input type="text" class="form-input" name="txtname" placeholder="Enter complaint title" required>
+
+                    <label class="form-label">Complaint Content</label>
+                    <textarea class="form-input" name="txt_content" placeholder="Describe your complaint..." required style="min-height:110px; resize:vertical;"></textarea>
+
+                    <button type="submit" name="btn_submit" class="btn-submit">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Complaint
+                    </button>
+                </form>
+            </div>
+
+            <!-- COMPLAINTS LIST -->
+            <div class="glass-box">
+                <div class="section-title">
+                    <i class="fa-solid fa-list"></i>
+                    My Complaints
+                </div>
+                <div class="table-responsive">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Content</th>
+                                <th>Status</th>
+                                <th>Reply</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in Viewcomplaint %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ i.complaint_date }}</td>
+                                <td>{{ i.complaint_title }}</td>
+                                <td>{{ i.complaint_content }}</td>
+                                <td>
+                                    {% if i.complaint_status == 1 %}
+                                    <span class="badge-replied"><i class="fa-solid fa-check"></i> Replied</span>
+                                    {% else %}
+                                    <span class="badge-pending"><i class="fa-solid fa-clock"></i> Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if i.complaint_status == 0 %}
+                                    <span style="color: rgba(255,255,255,0.35); font-size:13px;">—</span>
+                                    {% else %}
+                                    {{ i.complaint_reply }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'User:Deletecomplaint' i.id %}" class="btn-delete">
+                                        <i class="fa-solid fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="empty-msg">
+                                    <i class="fa-solid fa-inbox" style="font-size:24px; margin-bottom:8px; display:block;"></i>
+                                    No complaints submitted yet
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        function closePopup() {
+            document.getElementById('successPopup').classList.remove('active');
+        }
+
+        // Auto close after 4 seconds
+        window.addEventListener('load', function () {
+            const popup = document.getElementById('successPopup');
+            if (popup) {
+                setTimeout(() => popup.classList.remove('active'), 4000);
+            }
+        });
+    </script>
+
+</body>
+</html>
+{% endblock content %}

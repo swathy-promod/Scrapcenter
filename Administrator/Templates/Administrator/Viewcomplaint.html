@@ -1,0 +1,283 @@
+Complaint
+
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .complaint-container {
+        padding: 30px;
+    }
+
+    .complaint-card {
+        background: #191c24;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-header-custom h3 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .table {
+        color: white;
+        margin-bottom: 0;
+    }
+
+    .table thead {
+        background: #2A3038;
+    }
+
+    .table thead th {
+        border: none;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .table tbody td {
+        border-color: #3e444d;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .section-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .user-badge {
+        background: rgba(37,117,252,.15);
+        color: #4da3ff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .scrap-badge {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .date-badge {
+        background: rgba(106,17,203,.15);
+        color: #b388ff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: rgba(255,193,7,.15);
+        color: #ffc107;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .status-replied {
+        background: rgba(40,167,69,.15);
+        color: #28a745;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .reply-btn {
+        background: linear-gradient(135deg,#6a11cb,#2575fc);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-block;
+    }
+
+    .reply-btn:hover {
+        color: white;
+        text-decoration: none;
+        opacity: .9;
+    }
+
+    .reply-text {
+        max-width: 250px;
+        word-wrap: break-word;
+    }
+
+    .complaint-text {
+        max-width: 300px;
+        word-wrap: break-word;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="complaint-container">
+
+        <div class="card complaint-card">
+
+            <div class="card-header-custom">
+                <h3>
+                    <i class="mdi mdi-alert-circle"></i>
+                    Complaint Management
+                </h3>
+            </div>
+
+            <div class="card-body">
+
+                <h4 class="section-title">
+                    <i class="mdi mdi-format-list-bulleted"></i>
+                    User Complaints
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Sent By</th>
+                                <th>Title</th>
+                                <th>Complaint</th>
+                                <th>Status</th>
+                                <th>Reply</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for i in Viewcomplaint %}
+                            <tr>
+
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>
+                                    <span class="date-badge">
+                                        <i class="mdi mdi-calendar"></i>
+                                        {{ i.complaint_date }}
+                                    </span>
+                                </td>
+
+                                <!-- FIX: check if user field is set, otherwise show scrap center name -->
+                                <td>
+                                    {% if i.user %}
+                                        <span class="user-badge">
+                                            <i class="mdi mdi-account"></i>
+                                            {{ i.user.userregistration_name }}
+                                        </span>
+                                    {% elif i.scrap %}
+                                        <span class="scrap-badge">
+                                            <i class="mdi mdi-store"></i>
+                                            {{ i.scrap.scrapcenterreg_name }}
+                                        </span>
+                                    {% else %}
+                                        <span style="color: rgba(255,255,255,0.4);">—</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    <strong>{{ i.complaint_title }}</strong>
+                                </td>
+
+                                <td class="complaint-text">
+                                    {{ i.complaint_content }}
+                                </td>
+
+                                <td>
+                                    {% if i.complaint_status == 1 %}
+                                        <span class="status-replied">
+                                            <i class="mdi mdi-check-circle"></i>
+                                            REPLIED
+                                        </span>
+                                    {% else %}
+                                        <span class="status-pending">
+                                            <i class="mdi mdi-clock-outline"></i>
+                                            PENDING
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td class="reply-text">
+                                    {% if i.complaint_status == 0 %}
+                                        <span class="status-pending">
+                                            Awaiting Reply
+                                        </span>
+                                    {% else %}
+                                        {{ i.complaint_reply }}
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if i.complaint_status == 0 %}
+                                        <a href="{% url 'Administrator:Reply' i.id %}" class="reply-btn">
+                                            <i class="mdi mdi-reply"></i>
+                                            Reply
+                                        </a>
+                                    {% else %}
+                                        <span class="status-replied">
+                                            <i class="mdi mdi-check-circle"></i>
+                                            Completed
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+                                <td colspan="8" class="text-center text-muted" style="padding: 30px;">
+                                    <i class="mdi mdi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                                    No Complaints Available
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% if msg %}
+<script>
+  alert("{{ msg }}");
+  window.location = "{% url 'Administrator:Viewcomplaint' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

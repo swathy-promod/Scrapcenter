@@ -1,0 +1,204 @@
+Category
+
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .category-container {
+        padding: 30px;
+    }
+
+    .category-card {
+        background: #191c24;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-header-custom h3 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .form-control-custom {
+        background: #2A3038;
+        border: 1px solid #3e444d;
+        color: white;
+        border-radius: 10px;
+        height: 50px;
+    }
+
+    .form-control-custom:focus {
+        background: #2A3038;
+        color: white;
+        border-color: #6a11cb;
+        box-shadow: none;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        border: none;
+        padding: 10px 30px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+    }
+
+    .btn-save:hover {
+        opacity: 0.9;
+        color: white;
+    }
+
+    .table {
+        color: white;
+    }
+
+    .table thead {
+        background: #2A3038;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-edit {
+        background: #28a745;
+        color: white;
+        padding: 6px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+
+    .btn-delete:hover,
+    .btn-edit:hover {
+        color: white;
+        text-decoration: none;
+        opacity: 0.9;
+    }
+
+    .section-title {
+        color: white;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="category-container">
+
+        <!-- Category Form Card -->
+        <div class="card category-card mb-4">
+            <div class="card-header-custom">
+                <h3>
+                    <i class="mdi mdi-car-side"></i>
+                    Vehicle Category Management
+                </h3>
+            </div>
+
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label class="text-white">
+                            <i class="mdi mdi-tag"></i>
+                            Category Name
+                        </label>
+
+                        <input type="text"
+                               name="txtname"
+                               class="form-control form-control-custom"
+                               value="{{data.category_name}}"
+                               placeholder="Enter Vehicle Category"
+                               required>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-save">
+                            <i class="mdi mdi-content-save"></i>
+                            Save Category
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Category List Card -->
+        <div class="card category-card">
+            <div class="card-body">
+
+                <h4 class="section-title">
+                    <i class="mdi mdi-format-list-bulleted"></i>
+                    Category List
+                </h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Category Name</th>
+                                <th width="200">Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for i in category %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>
+                                    <i class="mdi mdi-car text-primary"></i>
+                                    {{ i.category_name }}
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'Administrator:Categoryedit' i.id %}"
+                                       class="btn-edit">
+                                        <i class="mdi mdi-pencil"></i>
+                                        Edit
+                                    </a>
+
+                                    <a href="{% url 'Administrator:Categorydelete' i.id %}"
+                                       class="btn-delete ml-2"
+                                       onclick="return confirm('Are you sure?')">
+                                        <i class="mdi mdi-delete"></i>
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">
+                                    No Categories Found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

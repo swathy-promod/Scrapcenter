@@ -1,0 +1,186 @@
+{% extends 'Administrator/Header.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    .feedback-container {
+        padding: 30px;
+    }
+
+    .feedback-card {
+        background: #191c24;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card-header-custom h3 {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .table {
+        color: white;
+        margin-bottom: 0;
+    }
+
+    .table thead {
+        background: #2A3038;
+    }
+
+    .table thead th {
+        border: none;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .table tbody td {
+        border-color: #3e444d;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background: rgba(255,255,255,0.05);
+    }
+
+    .section-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .feedback-content {
+        max-width: 400px;
+        word-wrap: break-word;
+    }
+
+    .user-badge {
+        background: rgba(37,117,252,0.15);
+        color: #4da3ff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .date-badge {
+        background: rgba(106,17,203,0.15);
+        color: #b388ff;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+    }
+
+    .btn-reply {
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 7px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .btn-reply:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="feedback-container">
+
+        <div class="card feedback-card">
+
+            <div class="card-header-custom">
+                <h3>
+                    <i class="mdi mdi-message-text"></i>
+                    User Feedback Management
+                </h3>
+            </div>
+
+            <div class="card-body">
+
+                <h4 class="section-title">
+                    <i class="mdi mdi-format-list-bulleted"></i>
+                    Feedback Details
+                </h4>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>User Name</th>
+                                <th>Feedback Content</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for i in viewfeedback %}
+                            <tr>
+
+                                <td>{{ forloop.counter }}</td>
+
+                                <td>
+                                    <span class="date-badge">
+                                        <i class="mdi mdi-calendar"></i>
+                                        {{ i.feedback_date }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="user-badge">
+                                        <i class="mdi mdi-account"></i>
+                                        {{ i.user.userregistration_name }}
+                                    </span>
+                                </td>
+
+                                <td class="feedback-content">
+                                    <i class="mdi mdi-message-text-outline text-info"></i>
+                                    {{ i.feedback_content }}
+                                </td>
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    No Feedback Available
+                                </td>
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

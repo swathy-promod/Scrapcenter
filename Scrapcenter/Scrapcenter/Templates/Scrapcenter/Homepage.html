@@ -1,0 +1,839 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCRAPCENTER</title>
+
+    <link rel="stylesheet" href="{% static 'Main/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            background-image:
+                linear-gradient(135deg,
+                    rgba(11, 29, 58, 0.93),
+                    rgba(17, 24, 39, 0.89),
+                    rgba(30, 27, 75, 0.93)),
+                url("{% static 'Main/images/image369.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: rgba(79, 140, 255, 0.12);
+            border-radius: 50%;
+            top: -150px;
+            left: -150px;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: rgba(168, 85, 247, 0.12);
+            border-radius: 50%;
+            bottom: -150px;
+            right: -150px;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===================== NAVBAR ===================== */
+
+        .navbar {
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            padding: 18px 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(5, 10, 25, 0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .logo {
+            text-decoration: none;
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: #3b82f6;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #60a5fa;
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            left: 0;
+            bottom: -6px;
+            background: #3b82f6;
+            transition: 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            padding: 11px 26px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            border-radius: 12px !important;
+            color: white !important;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+            transition: 0.3s ease !important;
+        }
+
+        .nav-btn::after {
+            display: none !important;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 28px rgba(37, 99, 235, 0.55) !important;
+        }
+
+        /* ===================== DROPDOWN ===================== */
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            position: relative;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .nav-dropdown-toggle:hover {
+            color: #60a5fa;
+        }
+
+        .nav-dropdown-toggle i {
+            font-size: 11px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-toggle i,
+        .nav-dropdown.open .nav-dropdown-toggle i {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 14px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 18, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            padding: 8px;
+            min-width: 180px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        /* Invisible bridge so the gap between toggle and menu doesn't break hover */
+        .nav-dropdown::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 14px;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-menu,
+        .nav-dropdown.open .nav-dropdown-menu {
+            display: block;
+        }
+
+        .nav-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.78) !important;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .nav-dropdown-menu a::after {
+            display: none !important;
+        }
+
+        .nav-dropdown-menu a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white !important;
+        }
+
+        .nav-dropdown-menu a i {
+            color: #4f8cff;
+            font-size: 14px;
+            width: 16px;
+        }
+
+        /* ===================== MENU TOGGLE ===================== */
+
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* ===================== BANNER ===================== */
+
+        .banner_section {
+            padding: 110px 0 90px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner_taital {
+            font-size: 58px;
+            font-weight: 700;
+            line-height: 72px;
+            letter-spacing: -0.5px;
+        }
+
+        .banner_text {
+            margin-top: 14px;
+            color: rgba(209, 213, 219, 0.9);
+            font-size: 15px;
+            line-height: 1.85;
+        }
+
+        .highlight-text {
+            color: #4f8cff;
+            font-weight: 600;
+        }
+
+        /* ===================== GLASS BOX ===================== */
+
+        .glass-box {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.11);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border-radius: 24px;
+            padding: 38px;
+            box-shadow:
+                0 8px 40px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-box:hover {
+            transform: translateY(-6px);
+            box-shadow:
+                0 18px 55px rgba(0, 0, 0, 0.55),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===================== STATS ROW ===================== */
+
+        .stats-row {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 18px 14px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4f8cff;
+            margin: 0;
+        }
+
+        .stat-item p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 4px 0 0;
+        }
+
+        /* ===================== STEP BADGES ===================== */
+
+        .step-list {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .step-badge {
+            min-width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+        }
+
+        .step-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.78);
+            line-height: 1.6;
+            padding-top: 6px;
+        }
+
+        /* ===================== BUTTONS ===================== */
+
+        .custom-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #4f8cff, #2563eb);
+            color: white;
+            padding: 13px 30px;
+            border-radius: 14px;
+            text-decoration: none;
+            margin-top: 28px;
+            transition: 0.3s ease;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        .custom-btn:hover {
+            transform: translateY(-3px);
+            color: white;
+            box-shadow: 0 8px 25px rgba(79, 140, 255, 0.55);
+            text-decoration: none;
+        }
+
+        .custom-btn-green {
+            background: linear-gradient(45deg, #059669, #10b981);
+        }
+
+        .custom-btn-green:hover {
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.55);
+        }
+
+        /* ===================== DIVIDER ===================== */
+
+        .section-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(to right,
+                    transparent,
+                    rgba(255, 255, 255, 0.1),
+                    transparent);
+            margin: 0 auto;
+        }
+
+        /* ===================== FOOTER ===================== */
+
+        .footer {
+            width: 100%;
+            margin-top: 90px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            padding-top: 70px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-container {
+            width: 90%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 45px;
+            padding-bottom: 55px;
+        }
+
+        .footer-box h3 {
+            font-size: 20px;
+            margin-bottom: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .footer-box p {
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.85;
+            font-size: 14px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .footer-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 14px;
+            transition: 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a:hover {
+            color: #60a5fa;
+            transform: translateX(5px);
+        }
+
+        .footer-links a i {
+            font-size: 13px;
+            color: #4f8cff;
+            width: 16px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #2563eb;
+            border-color: #2563eb;
+            transform: translateY(-4px);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-bottom span {
+            color: #4f8cff;
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+
+        @media(max-width: 992px) {
+            .navbar {
+                padding: 16px 22px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(5, 10, 30, 0.97);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+                padding: 28px 0;
+                display: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-dropdown-menu {
+                position: static;
+                transform: none;
+                background: rgba(255, 255, 255, 0.05);
+                box-shadow: none;
+                border: none;
+                padding: 4px 0 4px 20px;
+                display: block;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .banner_taital {
+                font-size: 38px;
+                line-height: 50px;
+            }
+
+            .glass-box {
+                margin-bottom: 20px;
+            }
+
+            .stats-row {
+                gap: 12px;
+            }
+
+            .stat-item h3 {
+                font-size: 22px;
+            }
+        }
+
+        @media(max-width: 480px) {
+            .banner_taital {
+                font-size: 32px;
+                line-height: 44px;
+            }
+
+            .stats-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===================== NAVBAR ===================== -->
+
+    <nav class="navbar">
+
+        <a href="{% url 'Scrapcenter:HomePage' %}" class="logo">
+            <span>Scrap</span>Here
+        </a>
+
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+
+        <div class="nav-links" id="navMenu">
+            <a href="{% url 'Scrapcenter:MyProfile' %}">PROFILE</a>
+            <a href="{% url 'Scrapcenter:Editprofile' %}">EDIT</a>
+            <a href="{% url 'Guest:index' %}" class="nav-btn">LOGOUT</a>
+            <a href="{% url 'Scrapcenter:Vehiclelist' %}">CHECK VEHICLE'S</a>
+            <a href="{% url 'Scrapcenter:MyRequest' %}">MY REQUEST'S</a>
+
+            <!-- DROPDOWN -->
+            <div class="nav-dropdown">
+                <span class="nav-dropdown-toggle" onclick="toggleDropdown(event)">
+                    SUPPORT <i class="fa-solid fa-chevron-down"></i>
+                </span>
+                <div class="nav-dropdown-menu">
+                    <a href="{% url 'Scrapcenter:Complaint' %}">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Complaints
+                    </a>
+                    <a href="{% url 'Scrapcenter:Feedback' %}">
+                        <i class="fa-solid fa-star"></i> Feedback
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </nav>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("navMenu").classList.toggle("active");
+        }
+
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const dropdown = event.currentTarget.closest('.nav-dropdown');
+            dropdown.classList.toggle('open');
+        }
+
+        // Close the dropdown when clicking anywhere outside it
+        document.addEventListener('click', function (e) {
+            document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+                if (!dd.contains(e.target)) {
+                    dd.classList.remove('open');
+                }
+            });
+        });
+    </script>
+
+    <!-- ===================== BANNER ===================== -->
+
+    <section class="banner_section">
+        <div class="container">
+            <div class="row align-items-stretch g-4">
+
+                <!-- LEFT BOX -->
+                <div class="col-md-6">
+                    <div class="glass-box">
+
+                        <h1 class="banner_taital">
+                            WELCOME<br>
+                            <span class="highlight-text">{{ scrap.scrapcenterreg_name }}</span>
+                        </h1>
+
+                        <p class="banner_text">
+                            Manage your scrap center with ease — track vehicles,
+                            handle requests, and grow your business all in one place.
+                        </p>
+
+                        <p class="banner_text" style="margin-top: 12px; color: rgba(255,255,255,0.70);">
+                            We're glad to have your scrap center on board. Browse incoming
+                            vehicle requests, verify listings, and connect with customers
+                            through <span class="highlight-text">ScrapHere</span> — fast,
+                            reliable, and completely digital.
+                        </p>
+
+                        <!-- STATS -->
+                        <div class="stats-row">
+                            <div class="stat-item">
+                                <h3>340+</h3>
+                                <p>Vehicles Listed</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>80+</h3>
+                                <p>Active Requests</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>95%</h3>
+                                <p>Satisfaction Rate</p>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'Scrapcenter:Vehiclelist' %}" class="custom-btn">
+                            Check Vehicles &rarr;
+                        </a>
+
+                    </div>
+                </div>
+
+                <!-- RIGHT BOX -->
+                <div class="col-md-6">
+                    <div class="glass-box">
+
+                        <h1 class="banner_taital" style="font-size: 40px; line-height: 54px;">
+                            Your Scrap Center<br>
+                            <span class="highlight-text">Dashboard Guide</span>
+                        </h1>
+
+                        <p class="banner_text" style="color: rgba(255,255,255,0.70);">
+                            Everything you need to run your scrap center smoothly.
+                            Here's how to get the most out of ScrapHere.
+                        </p>
+
+                        <!-- HOW IT WORKS STEPS -->
+                        <div class="step-list">
+
+                            <div class="step-item">
+                                <div class="step-badge">1</div>
+                                <div class="step-text">
+                                    <strong>Browse vehicle listings</strong> — check all available vehicles submitted by users near your area.
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-badge">2</div>
+                                <div class="step-text">
+                                    <strong>Send a pickup request</strong> — select a vehicle and submit a request to the owner directly.
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-badge">3</div>
+                                <div class="step-text">
+                                    <strong>Track your requests</strong> — monitor all active and completed requests from your dashboard.
+                                </div>
+                            </div>
+
+                            <div class="step-item">
+                                <div class="step-badge">4</div>
+                                <div class="step-text">
+                                    <strong>Complete the pickup</strong> — confirm collection and close the request once the vehicle is received.
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <a href="{% url 'Scrapcenter:MyRequest' %}" class="custom-btn custom-btn-green">
+                            My Requests &rarr;
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- ===================== FOOTER ===================== -->
+
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <!-- ABOUT -->
+            <div class="footer-box">
+                <h3>ScrapHERE</h3>
+                <p>
+                    ScrapHERE is your trusted digital platform for smart vehicle
+                    scrap management, seamless services, and innovative modern solutions
+                    built for every scrap center across India.
+                </p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <!-- QUICK LINKS -->
+            <div class="footer-box">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <a href="{% url 'Guest:index' %}"><i class="fa-solid fa-house"></i> Home</a>
+                    <a href="#about"><i class="fa-solid fa-circle-info"></i> About</a>
+                    <a href="#contact"><i class="fa-solid fa-headset"></i> Contact</a>
+                    <a href="{% url 'Guest:Login' %}"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+                </div>
+            </div>
+
+            <!-- REGISTRATIONS -->
+            <div class="footer-box">
+                <h3>Registrations</h3>
+                <div class="footer-links">
+                    <a href="{% url 'Guest:userregistration' %}">
+                        <i class="fa-solid fa-user-plus"></i> User Registration
+                    </a>
+                    <a href="{% url 'Guest:ScrapcenterReg' %}">
+                        <i class="fa-solid fa-building"></i> Scrapcenter Registration
+                    </a>
+                </div>
+            </div>
+
+            <!-- CONTACT -->
+            <div class="footer-box" id="contact">
+                <h3>Contact Us</h3>
+                <div class="footer-links">
+                    <a href="tel:+919876543210">
+                        <i class="fa-solid fa-phone"></i> +91 98765 43210
+                    </a>
+                    <a href="mailto:support@scraphere.com">
+                        <i class="fa-solid fa-envelope"></i> support@scraphere.com
+                    </a>
+                    <a href="#">
+                        <i class="fa-solid fa-location-dot"></i> Kerala, India
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <section id="about"></section>
+
+        <div class="footer-bottom">
+            © 2026 <span>ScrapHere</span>. All Rights Reserved. Made with
+            <i class="fa-solid fa-heart" style="color: #ef4444; font-size: 11px;"></i>
+            in Kerala, India.
+        </div>
+
+    </footer>
+
+</body>
+
+</html>

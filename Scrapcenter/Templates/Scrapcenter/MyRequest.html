@@ -1,0 +1,303 @@
+{% extends 'Guest/mid.html' %}
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#020617,#0f172a,#111827);
+    overflow-x: hidden;
+    color: white;
+}
+
+.mr-section{
+    min-height: 100vh;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mr-section::before{
+    content: "";
+    position: absolute;
+    width: 420px; height: 420px;
+    background: rgba(37,99,235,0.35);
+    border-radius: 50%;
+    top: -120px; left: -120px;
+    filter: blur(120px);
+    pointer-events: none;
+}
+
+.mr-section::after{
+    content: "";
+    position: absolute;
+    width: 350px; height: 350px;
+    background: rgba(168,85,247,0.28);
+    border-radius: 50%;
+    bottom: -100px; right: -100px;
+    filter: blur(120px);
+    pointer-events: none;
+}
+
+.mr-header{
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+}
+
+.mr-icon{
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 8px 20px rgba(59,130,246,0.35);
+}
+
+.mr-header h2{ font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+.mr-header p{ color: rgba(255,255,255,0.55); font-size: 14px; }
+
+.mr-container{
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(16px);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+    overflow-x: auto;
+    animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(25px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.mr-table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 860px;
+}
+
+.mr-table thead tr{
+    background: rgba(59,130,246,0.18);
+    border-bottom: 1px solid rgba(59,130,246,0.35);
+}
+
+.mr-table thead th{
+    padding: 13px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.mr-table tbody tr{
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s;
+}
+
+.mr-table tbody tr:hover{ background: rgba(255,255,255,0.05); }
+
+.mr-table tbody td{
+    padding: 12px 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    vertical-align: middle;
+}
+
+.mr-table tbody tr:last-child{ border-bottom: none; }
+
+.sl-no{
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #60a5fa;
+}
+
+/* BADGES */
+.badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-yellow{ background:rgba(234,179,8,0.15);  color:#facc15; border:1px solid rgba(234,179,8,0.3); }
+.badge-green{  background:rgba(34,197,94,0.15);   color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+.badge-red{    background:rgba(239,68,68,0.15);   color:#f87171; border:1px solid rgba(239,68,68,0.3); }
+.badge-blue{   background:rgba(59,130,246,0.15);  color:#60a5fa; border:1px solid rgba(59,130,246,0.3); }
+
+.price{
+    font-weight: 600;
+    color: #4ade80;
+    font-size: 13px;
+}
+
+.action-col{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.btn-pay{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 14px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-pay:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(37,99,235,0.4);
+}
+
+.remark-text{
+    max-width: 140px;
+    white-space: normal;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+}
+
+.empty-state{
+    text-align: center;
+    padding: 50px 20px;
+    color: rgba(255,255,255,0.4);
+}
+
+.empty-state i{ font-size: 44px; display: block; margin-bottom: 12px; }
+
+@media(max-width:768px){
+    .mr-header h2{ font-size: 22px; }
+}
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<section class="mr-section">
+
+    <div class="mr-header">
+        <div class="mr-icon">
+            <i class="ti ti-clipboard-list" style="color:#fff; font-size:26px;"></i>
+        </div>
+        <h2>My Requests</h2>
+        <p>Track the status of your scrap requests</p>
+    </div>
+
+    <div class="mr-container">
+        <table class="mr-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Brand / Model</th>
+                    <th>Description</th>
+                    <th>Offer Price</th>
+                    <th>Remark</th>
+                    <th>Owner Name</th>
+                    <th>Owner Email</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td><div class="sl-no">{{ forloop.counter }}</div></td>
+
+                    <td>
+                        <div style="font-weight:600; font-size:13px;">
+                            {{ i.vehicle.model.brand.brand_name }}
+                        </div>
+                        <div style="color:rgba(255,255,255,0.5); font-size:12px;">
+                            {{ i.vehicle.model.model_name }}
+                        </div>
+                    </td>
+
+                    <td class="remark-text">{{ i.vehicle.vehicle_discription }}</td>
+
+                    <td>
+                        <span class="price">₹ {{ i.offered_prize }}</span>
+                    </td>
+
+                    <td class="remark-text">{{ i.request_remark }}</td>
+
+                    <td style="font-size:13px;">{{ i.vehicle.user.userregistration_name }}</td>
+
+                    <td style="font-size:12px; color:rgba(255,255,255,0.6);">
+                        {{ i.vehicle.user.userregistration_email }}
+                    </td>
+
+                    <td>
+                        <div class="action-col">
+                            {% if i.request_status == 0 %}
+                                <span class="badge badge-yellow">
+                                    <i class="ti ti-clock" style="font-size:11px;"></i> Pending
+                                </span>
+                            {% elif i.request_status == 1 %}
+                                <span class="badge badge-green">
+                                    <i class="ti ti-check" style="font-size:11px;"></i> Accepted
+                                </span>
+                                <a class="btn-pay" href="{% url 'Scrapcenter:Payment' i.id %}">
+                                    <i class="ti ti-credit-card" style="font-size:12px;"></i> Payment
+                                </a>
+                            {% elif i.request_status == 3 %}
+                                <span class="badge badge-blue">
+                                    <i class="ti ti-circle-check" style="font-size:11px;"></i> Payment Done
+                                </span>
+                            {% else %}
+                                <span class="badge badge-red">
+                                    <i class="ti ti-x" style="font-size:11px;"></i> Rejected
+                                </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <i class="ti ti-clipboard-x"></i>
+                            No requests found.
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{% if msg %}
+<script>
+    alert("{{ msg }}");
+    window.location = "{% url 'Scrapcenter:MyRequest' %}";
+</script>
+{% endif %}
+
+{% endblock content %}

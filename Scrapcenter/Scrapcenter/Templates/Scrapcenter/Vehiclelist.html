@@ -1,0 +1,301 @@
+{% extends 'Guest/mid.html' %}
+{% block content %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#020617,#0f172a,#111827);
+    overflow-x: hidden;
+    color: white;
+}
+
+.vl-section{
+    min-height: 100vh;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.vl-section::before{
+    content: "";
+    position: absolute;
+    width: 420px; height: 420px;
+    background: rgba(37,99,235,0.35);
+    border-radius: 50%;
+    top: -120px; left: -120px;
+    filter: blur(120px);
+    pointer-events: none;
+}
+
+.vl-section::after{
+    content: "";
+    position: absolute;
+    width: 350px; height: 350px;
+    background: rgba(168,85,247,0.28);
+    border-radius: 50%;
+    bottom: -100px; right: -100px;
+    filter: blur(120px);
+    pointer-events: none;
+}
+
+.vl-header{
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+}
+
+.vl-icon{
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    box-shadow: 0 8px 20px rgba(59,130,246,0.35);
+}
+
+.vl-header h2{ font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+.vl-header p{ color: rgba(255,255,255,0.55); font-size: 14px; }
+
+.vl-container{
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.10);
+    backdrop-filter: blur(16px);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+    overflow-x: auto;
+    animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn{
+    from{ opacity:0; transform:translateY(25px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.vl-table{
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.vl-table thead tr{
+    background: rgba(59,130,246,0.18);
+    border-bottom: 1px solid rgba(59,130,246,0.35);
+}
+
+.vl-table thead th{
+    padding: 13px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.vl-table tbody tr{
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: background 0.2s;
+}
+
+.vl-table tbody tr:hover{ background: rgba(255,255,255,0.05); }
+
+.vl-table tbody td{
+    padding: 12px 14px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.85);
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.vl-table tbody tr:last-child{ border-bottom: none; }
+
+/* BADGES */
+.badge{
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-green{ background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.25); }
+.badge-red{   background:rgba(239,68,68,0.15);  color:#f87171; border:1px solid rgba(239,68,68,0.25); }
+.badge-blue{  background:rgba(59,130,246,0.15); color:#60a5fa; border:1px solid rgba(59,130,246,0.25); }
+.badge-yellow{background:rgba(234,179,8,0.15);  color:#facc15; border:1px solid rgba(234,179,8,0.25); }
+
+.vl-img{
+    width: 80px; height: 48px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+.sl-no{
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(59,130,246,0.15);
+    border: 1px solid rgba(59,130,246,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: #60a5fa;
+}
+
+.btn-request{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#2563eb,#3b82f6);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-request:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(37,99,235,0.4);
+}
+
+.empty-state{
+    text-align: center;
+    padding: 50px 20px;
+    color: rgba(255,255,255,0.45);
+}
+
+.empty-state i{ font-size: 48px; display: block; margin-bottom: 12px; }
+
+@media(max-width:768px){
+    .vl-header h2{ font-size: 22px; }
+}
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<section class="vl-section">
+
+    <div class="vl-header">
+        <div class="vl-icon">
+            <i class="ti ti-car" style="color:#fff; font-size:26px;"></i>
+        </div>
+        <h2>Vehicle List</h2>
+        <p>Browse and request available vehicles for scrap</p>
+    </div>
+
+    <div class="vl-container">
+        <table class="vl-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Photo</th>
+                    <th>Brand / Model</th>
+                    <th>Year</th>
+                    <th>Fuel</th>
+                    <th>Transmission</th>
+                    <th>Condition</th>
+                    <th>Mileage</th>
+                    <th>RC</th>
+                    <th>Insurance</th>
+                    <th>Status</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in Vehiclelist %}
+                <tr>
+                    <td><div class="sl-no">{{ forloop.counter }}</div></td>
+
+                    <td>
+                        <img class="vl-img"
+                             src="{{ i.vehicle_photo.url }}"
+                             alt="{{ i.model.brand.brand_name }}">
+                    </td>
+
+                    <td>
+                        <div style="font-weight:600; font-size:13px;">
+                            {{ i.model.brand.brand_name }}
+                        </div>
+                        <div style="color:rgba(255,255,255,0.5); font-size:12px;">
+                            {{ i.model.model_name }}
+                        </div>
+                    </td>
+
+                    <td>{{ i.vehicle_year }}</td>
+
+                    <td><span class="badge badge-blue">{{ i.vehicle_fuel }}</span></td>
+
+                    <td>{{ i.transmission_type }}</td>
+
+                    <td><span class="badge badge-green">{{ i.vehicle_condition }}</span></td>
+
+                    <td>{{ i.vehicle_mileage }}</td>
+
+                    <td>
+                        {% if i.vehicle_RC %}
+                            <span class="badge badge-green">Valid</span>
+                        {% else %}
+                            <span class="badge badge-red">Expired</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if i.insurence_status %}
+                            <span class="badge badge-green">Active</span>
+                        {% else %}
+                            <span class="badge badge-red">Expired</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="badge badge-yellow">{{ i.vehicle_status }}</span>
+                    </td>
+
+                    <td>
+                        <div style="font-size:13px;">{{ i.place.district.district_name }}</div>
+                        <div style="color:rgba(255,255,255,0.5); font-size:12px;">{{ i.place.place_name }}</div>
+                    </td>
+
+                    <td style="max-width:150px; white-space:normal; font-size:12px; color:rgba(255,255,255,0.6);">
+                        {{ i.vehicle_discription }}
+                    </td>
+
+                    <td>
+                        <a class="btn-request" href="{% url 'Scrapcenter:requestscrap' i.id %}">
+                            <i class="ti ti-arrows-exchange" style="font-size:13px;"></i>
+                            Request
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="14">
+                        <div class="empty-state">
+                            <i class="ti ti-car-off"></i>
+                            No vehicles found.
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+{% endblock content %}

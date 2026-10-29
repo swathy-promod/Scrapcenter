@@ -1,0 +1,370 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ScrapHere</title>
+    <link rel="stylesheet" href="{% static 'Admin/assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Admin/assets/vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{% static 'Admin/assets/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'Admin/assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Admin/assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Admin/assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Admin/assets/css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'Admin/assets/images/favicon.png' %}" />
+    <style>
+      .logo {
+        text-decoration: none;
+        font-size: 28px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 1px;
+      }
+      .logo span {
+        color: #3b82f6;
+      }
+      .admin-avatar-circle {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 14px; font-weight: 700;
+        color: white; flex-shrink: 0;
+      }
+      .sidebar-avatar-circle {
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; font-weight: 700;
+        color: white; flex-shrink: 0;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-scroller">
+
+      <!-- Sidebar -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+          <a href="{% url 'Administrator:HomePage' %}" class="logo">
+            <span>Scrap</span>Here
+          </a>
+        </div>
+
+        <ul class="nav">
+
+          <!-- Sidebar Profile -->
+          <li class="nav-item profile">
+            <div class="profile-desc">
+              <div class="profile-pic">
+                <div class="count-indicator d-flex align-items-center">
+                  <div class="sidebar-avatar-circle">
+                    {{ admin.adminregistration_name|first|upper }}
+                  </div>
+                  <div class="profile-name">
+                    <h5 class="mb-0 font-weight-normal">
+                      {{ admin.adminregistration_name|default:"Admin" }}
+                    </h5>
+                    <span>Administrator</span>
+                  </div>
+                </div>
+              </div>
+              <a href="#" id="profile-dropdown" data-toggle="dropdown">
+                <i class="mdi mdi-dots-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right sidebar-dropdown preview-list" aria-labelledby="profile-dropdown">
+                <a href="{% url 'Administrator:AdminProfile' %}" class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-settings text-primary"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1 text-small">Account settings</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{% url 'Administrator:ChangePassword' %}" class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-onepassword text-info"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1 text-small">Change Password</p>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="#" class="dropdown-item preview-item">
+                  <div class="preview-thumbnail">
+                    <div class="preview-icon bg-dark rounded-circle">
+                      <i class="mdi mdi-calendar-today text-success"></i>
+                    </div>
+                  </div>
+                  <div class="preview-item-content">
+                    <p class="preview-subject ellipsis mb-1 text-small">To-do list</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-item nav-category">
+            <span class="nav-link">Navigation</span>
+          </li>
+
+          <!-- Home -->
+          <li class="nav-item menu-items">
+            <a class="nav-link" href="{% url 'Administrator:HomePage' %}">
+              <span class="menu-icon"><i class="mdi mdi-speedometer"></i></span>
+              <span class="menu-title">Home</span>
+            </a>
+          </li>
+
+          <!-- Location -->
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#menu-location" aria-expanded="false" aria-controls="menu-location">
+              <span class="menu-icon"><i class="mdi mdi-map-marker"></i></span>
+              <span class="menu-title">Location</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="menu-location">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:District' %}">District</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:Place' %}">Place</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Vehicle Category -->
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#menu-category" aria-expanded="false" aria-controls="menu-category">
+              <span class="menu-icon"><i class="mdi mdi-car"></i></span>
+              <span class="menu-title">Vehicle Category</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="menu-category">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:Category' %}">Category</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:SubCategory' %}">SubCategory</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Brand & Model -->
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#menu-brand" aria-expanded="false" aria-controls="menu-brand">
+              <span class="menu-icon"><i class="mdi mdi-tag"></i></span>
+              <span class="menu-title">Brand & Model</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="menu-brand">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:Brand' %}">Brand</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:Model' %}">Model</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- Verification -->
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#menu-verification" aria-expanded="false" aria-controls="menu-verification">
+              <span class="menu-icon"><i class="mdi mdi-account-check"></i></span>
+              <span class="menu-title">Verification</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="menu-verification">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:userlist' %}">User List</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:scrapcenterlist' %}">Scrapcenter</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <!-- More -->
+          <li class="nav-item menu-items">
+            <a class="nav-link" data-toggle="collapse" href="#menu-more" aria-expanded="false" aria-controls="menu-more">
+              <span class="menu-icon"><i class="mdi mdi-message-text"></i></span>
+              <span class="menu-title">More</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="menu-more">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:ViewFeedback' %}">Feedback</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'Administrator:Viewcomplaint' %}">Complaint</a></li>
+              </ul>
+            </div>
+          </li>
+
+        </ul>
+      </nav>
+      <!-- End Sidebar -->
+
+      <div class="container-fluid page-body-wrapper">
+
+        <!-- Navbar -->
+        <nav class="navbar p-0 fixed-top d-flex flex-row">
+          <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
+            <a href="{% url 'Administrator:HomePage' %}" class="logo" style="font-size:20px;">
+              <span>Scrap</span>Here
+            </a>
+          </div>
+          <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+            <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+              <span class="mdi mdi-menu"></span>
+            </button>
+            <ul class="navbar-nav w-100"></ul>
+            <ul class="navbar-nav navbar-nav-right">
+
+              <!-- Admin Registration Shortcut -->
+              <li class="nav-item dropdown border-left">
+                <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
+                  <!-- ✅ FIXED: was missing the 'mdi' base class -->
+                  <i class="mdi mdi-view-grid"></i>
+                  <span class="count bg-danger"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                  <h6 class="p-3 mb-0">Quick Links</h6>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url 'Administrator:AdminRegistration' %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-account-plus text-primary"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Admin Registration</p>
+                      <p class="text-muted ellipsis mb-0">Manage admin accounts</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url 'Administrator:userlist' %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-account-check text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">User Verification</p>
+                      <p class="text-muted ellipsis mb-0">Review registered users</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url 'Administrator:Viewcomplaint' %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-alert text-danger"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Complaints</p>
+                      <p class="text-muted ellipsis mb-0">View pending complaints</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item preview-item" href="{% url 'Administrator:ViewFeedback' %}">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-message-text text-warning"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Feedback</p>
+                      <p class="text-muted ellipsis mb-0">View user feedback</p>
+                    </div>
+                  </a>
+                </div>
+              </li>
+
+              <!-- Navbar Profile -->
+              <li class="nav-item dropdown">
+                <a class="nav-link" id="profileDropdown" href="#" data-toggle="dropdown">
+                  <div class="navbar-profile d-flex align-items-center">
+                    <div class="admin-avatar-circle mr-2">
+                      {{ admin.adminregistration_name|first|upper }}
+                    </div>
+                    <p class="mb-0 d-none d-sm-block navbar-profile-name">
+                      {{ admin.adminregistration_name|default:"Admin" }}
+                    </p>
+                    <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                  </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="profileDropdown">
+                  <h6 class="p-3 mb-0">{{ admin.adminregistration_name|default:"Profile" }}</h6>
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'Administrator:AdminProfile' %}" class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-account text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">My Profile</p>
+                      <p class="text-muted mb-0">{{ admin.adminregistration_email }}</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'Administrator:ChangePassword' %}" class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-settings text-success"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Settings</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'Administrator:AdminLogout' %}" class="dropdown-item preview-item">
+                    <div class="preview-thumbnail">
+                      <div class="preview-icon bg-dark rounded-circle">
+                        <i class="mdi mdi-logout text-danger"></i>
+                      </div>
+                    </div>
+                    <div class="preview-item-content">
+                      <p class="preview-subject mb-1">Log out</p>
+                    </div>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <p class="p-3 mb-0 text-center">Advanced settings</p>
+                </div>
+              </li>
+
+            </ul>
+            <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+              <span class="mdi mdi-format-line-spacing"></span>
+            </button>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+
+        <div class="main-panel">
+          <div class="content-wrapper">
+            {% block content %}
+            {% endblock content %}
+          </div>
+        </div>
+
+      </div>
+      <!-- page-body-wrapper ends -->
+
+    </div>
+    <!-- container-scroller -->
+
+    <script src="{% static 'Admin/assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="{% static 'Admin/assets/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'Admin/assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+    <script src="{% static 'Admin/assets/vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+    <script src="{% static 'Admin/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'Admin/assets/vendors/owl-carousel-2/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'Admin/assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'Admin/assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'Admin/assets/js/misc.js' %}"></script>
+    <script src="{% static 'Admin/assets/js/settings.js' %}"></script>
+    <script src="{% static 'Admin/assets/js/todolist.js' %}"></script>
+    <script src="{% static 'Admin/assets/js/dashboard.js' %}"></script>
+  </body>
+</html>
